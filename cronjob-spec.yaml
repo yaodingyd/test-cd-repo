@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: cloudeng-sample-cron-job
+  name: test-cronjob
 spec:
   schedule: {{ .SCHEDULE }} 
   successfulJobsHistoryLimit: 2
@@ -21,5 +21,11 @@ spec:
             args:
             - /bin/sh
             - -c
-            - date; echo "{{.message}}"
+            - date; echo "{{.message}} $(NAME)"
+            env:
+            - name: NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: test-cronjob-cf
+                  key: name
           restartPolicy: Never
